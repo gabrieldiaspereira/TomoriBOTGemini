@@ -54,7 +54,9 @@ func MessageHandler(client *client.Client, message *events.Message) {
 	body := infra_whatsmeow_utils.GetMessageBody(message.Message)
 	quotedMsgInfo := infra_whatsmeow_utils.GetQuotedMessageContextInfo(message.Message)
 
-	if message.Info.IsGroup && !strings.HasPrefix(strings.ToLower(body), "tomori,") && !IsMentionedBot(quotedMsgInfo, botJid) {
+	//if message.Info.IsGroup && !strings.HasPrefix(strings.ToLower(body), "tomori,") && !IsMentionedBot(quotedMsgInfo, botJid) {
+	if message.Info.IsGroup && !(strings.HasPrefix(strings.ToLower(body), "tomori,") || strings.HasPrefix(strings.ToLower(body), "/")) && !IsMentionedBot(quotedMsgInfo, botJid) {
+
 		return
 	}
 
@@ -75,9 +77,9 @@ func MessageHandler(client *client.Client, message *events.Message) {
 		Arg:                  arg,
 		Timestamp:            processmentStartedTime,
 		MessageType:          messageType,
-		QuotedMsg: 					  quotedMsg,
+		QuotedMsg:            quotedMsg,
 	}
-	fmt.Println("🔍 Command received: "+arg)
+	fmt.Println("🔍 Command received: " + arg)
 	if messageType == "audio" {
 		audioMessage := commandProps.Message.Message.GetAudioMessage()
 		mediaBytes, err := client.Client.Download(audioMessage)
